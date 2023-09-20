@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-deployment
+spec:
+  selector:
+    matchLabels:
+      app: mongodb
+      tier: mongodb
+      track: stable
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongodb
+        tier: mongodb
+        track: stable
+    spec:
+      containers:
+        - name: db
+          image: prakhar22/mongo1
+          ports:
+            - name: backend
+              containerPort: 27017
+          lifecycle:
+            preStop:
+              exec:
+                command: ["mongosh"]
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodbservice
+spec:
+  selector:
+    app: mongodb
+    tier: mongodb
+  ports:
+  - protocol: TCP
+    port: 27017
+    targetPort: 27017
+  type: NodePort

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wafer-frontend
+spec:
+  selector:
+    matchLabels:
+      app: frontend
+      tier: frontend
+      track: stable
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: frontend
+        tier: frontend
+        track: stable
+    spec:
+      containers:
+        - name: banknote
+          image: prakhar22/wafer:frontend
+          ports:
+            - name: frontservice
+              containerPort: 8501
+          env:
+            - name: BACKEND_SERVICE_NAME
+              value: http://backend-service:6000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: frontend
+    tier: frontend
+  ports:
+  - protocol: "TCP"
+    port: 8501
+    targetPort: 8501
+  type: LoadBalancer
+

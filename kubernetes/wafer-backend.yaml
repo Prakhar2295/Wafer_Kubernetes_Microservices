@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wafer-backend
+spec:
+  selector:
+    matchLabels:
+      app: backend
+      tier: backend
+      track: stable
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: backend
+        tier: backend
+        track: stable
+    spec:
+      containers:
+        - name: banknote
+          image: prakhar22/wafer:backend
+          ports:
+            - name: frontservice
+              containerPort: 6000
+          env:
+            - name: MONGO_DB_HOST
+              value: mongodb://mongodbservice:27017
+            - name: MYSQL_HOST_IP
+              value: mysql-service
+            - name: MYSQL_USER
+              value: root
+            - name: MYSQL_PASSWORD
+              value: "123456"
+            - name: MYSQL_PORT
+              value: "3306"
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+    tier: backend
+  ports:
+  - protocol: "TCP"
+    port: 6000
+    targetPort: 6000
+  type: LoadBalancer
