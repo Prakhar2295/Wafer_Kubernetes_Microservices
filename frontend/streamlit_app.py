@@ -47,7 +47,6 @@ def main():
             #backend_servicename = "http://127.0.0.1:6000"
             response= requests.get(f"{backend_servicename}/get_prediction")
             #response = requests.get("http://127.0.0.1:6000/get_prediction")
-            #response = requests.get(f"http://{server_host}:{server_port}/get_prediction")
             st.write(f"Backend Response: {response.text}")
 
         
